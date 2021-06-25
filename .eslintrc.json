@@ -1,0 +1,49 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "plugins": ["react", "react-native"],
+  "rules": {
+    "react-native/no-unused-styles": 2,
+    "react-native/no-inline-styles": 2,
+    "react/jsx-filename-extension": 0,
+    "react/no-array-index-key": 0, // delete it for another projects
+    "global-require": 0, // delete it for another projects
+    "arrow-body-style": 0,
+    "react/prefer-stateless-function": 0,
+    "no-trailing-spaces": 0,
+    "comma-dangle": 0,
+    "radix": 0,
+    "max-len": [
+      2,
+      {
+        "code": 120,
+        "ignorePattern": "^import"
+      }
+    ],
+    "jsx-a11y/label-has-for": 0,
+    "class-methods-use-this": 0,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "exceptions": [
+          "TextInput",
+          "TextInputMask",
+          "TabBar",
+          "LayoutComponent"
+        ]
+      }
+    ],
+    "no-use-before-define": ["error", { "functions": true, "classes": true, "variables": false }]
+  }
+}
