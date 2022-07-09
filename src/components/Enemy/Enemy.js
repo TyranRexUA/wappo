@@ -1,41 +1,50 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing } from 'react-native';
+import React, {
+  memo, useEffect, useRef, useState,
+} from 'react';
+import {
+  Animated, Easing, Image, StyleSheet,
+} from 'react-native';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { cellSize } from '../../constants/map';
 import { moveEnemy, createLvl, setControlEnabled } from '../../store/actions';
-import EnemyImg from '../../assets/EnemyImg.svg';
+import useSize from '../../utils/useSize';
+import EnemyImg from '../../assets/enemy.png';
 
-const Enemy = () => {
+const Enemy = ({ data, isLastEnemy }) => {
+  const { x, y, id } = data;
   const dispatch = useDispatch();
   const [turn, setTurn] = useState(0);
+  const { cellSize } = useSize();
   const {
     lvl,
-    map,
-    enemyPos,
     charPos,
     firstMoveComplete
   } = useSelector((state) => state);
 
-  const moveAnimX = useRef(new Animated.Value(enemyPos.x * cellSize)).current;
-  const moveAnimY = useRef(new Animated.Value(enemyPos.y * cellSize)).current;
+  const moveAnimX = useRef(new Animated.Value(x * cellSize)).current;
+  const moveAnimY = useRef(new Animated.Value(y * cellSize)).current;
 
   const move = () => {
     if (turn === 0) {
       setTurn(1);
-      dispatch(moveEnemy(charPos, enemyPos, map));
+      dispatch(moveEnemy(id));
     }
     if (turn === 1) {
       setTurn(0);
-      dispatch(setControlEnabled(true));
+      if (isLastEnemy) {
+        dispatch(setControlEnabled(true));
+      } else {
+        dispatch(moveEnemy(id + 1));
+      }
     }
   };
 
-  const moveAnim = () => {
+  const moveAnim = (isResize) => {
     Animated.timing(
       moveAnimX,
       {
-        toValue: enemyPos.x * cellSize,
-        duration: 500,
+        toValue: x * cellSize,
+        duration: isResize ? 0 : 250,
         easing: Easing.linear,
         useNativeDriver: true
       }
@@ -44,14 +53,14 @@ const Enemy = () => {
     Animated.timing(
       moveAnimY,
       {
-        toValue: enemyPos.y * cellSize,
-        duration: 500,
+        toValue: y * cellSize,
+        duration: isResize ? 0 : 250,
         easing: Easing.linear,
         useNativeDriver: true
       }
     ).start(() => {
-      if (firstMoveComplete) {
-        if (charPos.x === enemyPos.x && charPos.y === enemyPos.y) {
+      if (firstMoveComplete && !isResize) {
+        if (charPos.x === x && charPos.y === y) {
           setTurn(0);
           dispatch(createLvl(lvl));
         } else {
@@ -61,22 +70,41 @@ const Enemy = () => {
     });
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      position: 'absolute',
+      width: cellSize,
+      height: cellSize,
+      padding: 6,
+    },
+    image: {
+      width: '100%',
+      height: '100%'
+    }
+  });
+
   useEffect(() => {
     moveAnim();
-  }, [enemyPos]);
+  }, [data]);
+
+  useEffect(() => {
+    moveAnim(true);
+  }, [cellSize]);
 
   return (
-    <Animated.View style={[style, { transform: [{ translateX: moveAnimX }, { translateY: moveAnimY }] }]}>
-      <EnemyImg height="100%" width="100%" color="white" />
+    <Animated.View style={[styles.container, { transform: [{ translateX: moveAnimX }, { translateY: moveAnimY }] }]}>
+      <Image source={EnemyImg} style={styles.image} />
     </Animated.View>
   );
 };
 
-const style = {
-  position: 'absolute',
-  width: cellSize,
-  height: cellSize,
-  padding: 6,
+Enemy.propTypes = {
+  isLastEnemy: PropTypes.bool.isRequired,
+  data: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }).isRequired
 };
 
-export default Enemy;
+export default memo(Enemy);

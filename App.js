@@ -6,41 +6,40 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   StatusBar,
   useColorScheme,
-  View,
+  StyleSheet,
 } from 'react-native';
-
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-import { Provider } from 'react-redux';
-import LvlText from './src/components/LvlText/LvlText';
-import Map from './src/components/Map/Map';
-import store from './src/store/store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { useDispatch } from 'react-redux';
+import Navigator from './src/navigation/Navigator';
+import { setCompletedLvl } from './src/store/actions';
 
 const App = () => {
+  const dispatch = useDispatch();
   const isDarkMode = useColorScheme() === 'dark';
+  useEffect(() => {
+    AsyncStorage.getItem('maxCompletedLvl').then((maxCompletedLvl) => {
+      dispatch(setCompletedLvl(parseInt(maxCompletedLvl || 0)));
+    });
+  }, []);
 
-  const style = {
-    height: '100%',
-    backgroundColor: isDarkMode ? Colors.lighter : Colors.darker,
-    justifyContent: 'center'
-  };
+  const styles = StyleSheet.create({
+    container: {
+      flexGrow: 1,
+      backgroundColor: Colors.darker
+    },
+  });
 
   return (
-    <Provider store={store}>
-      <SafeAreaView style={{ backgroundColor: isDarkMode ? Colors.lighter : Colors.darker, }}>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <LvlText />
-        <View style={style}>
-          <Map />
-        </View>
-      </SafeAreaView>
-    </Provider>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <Navigator />
+    </SafeAreaView>
   );
 };
 

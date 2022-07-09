@@ -1,29 +1,32 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import React, { memo, useEffect, useRef } from 'react';
+import {
+  Animated, Easing, Image, StyleSheet,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { cellSize } from '../../constants/map';
-import { moveEnemy, createLvl } from '../../store/actions';
-import CharImg from '../../assets/CharImg.svg';
+import { moveEnemy, setCompletedLvl, setModalVisible } from '../../store/actions';
+import useSize from '../../utils/useSize';
+import CharImg from '../../assets/char.png';
 
 const Char = () => {
   const dispatch = useDispatch();
+  const { cellSize } = useSize();
   const {
-    enemyPos,
+    lvl,
     map,
     charPos,
     firstMoveComplete,
-    lvl
   } = useSelector((state) => state);
 
   const moveAnimX = useRef(new Animated.Value(charPos.x * cellSize)).current;
   const moveAnimY = useRef(new Animated.Value(charPos.y * cellSize)).current;
 
-  const moveAnim = () => {
+  const moveAnim = (isResize) => {
     Animated.timing(
       moveAnimX,
       {
         toValue: charPos.x * cellSize,
-        duration: 500,
+        duration: isResize ? 0 : 250,
         easing: Easing.linear,
         useNativeDriver: true
       }
@@ -33,33 +36,53 @@ const Char = () => {
       moveAnimY,
       {
         toValue: charPos.y * cellSize,
-        duration: 500,
+        duration: isResize ? 0 : 250,
         easing: Easing.linear,
         useNativeDriver: true
       }
     ).start(() => {
-      if (/A/.test(map[charPos.y][charPos.x])) {
-        dispatch(createLvl(lvl + 1));
-      } else if (firstMoveComplete) dispatch(moveEnemy(charPos, enemyPos, map));
+      if (!isResize) {
+        if (/A/.test(map[charPos.y][charPos.x])) {
+          dispatch(setModalVisible(true));
+          AsyncStorage.getItem('maxCompletedLvl').then((maxCompletedLvl) => {
+            if (lvl > (parseInt(maxCompletedLvl || 0))) {
+              AsyncStorage.setItem('maxCompletedLvl', String(lvl));
+            }
+            dispatch(setCompletedLvl(lvl));
+          });
+        } else if (firstMoveComplete) {
+          dispatch(moveEnemy(1));
+        }
+      }
     });
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      position: 'absolute',
+      width: cellSize,
+      height: cellSize,
+      padding: 6,
+    },
+    image: {
+      width: '100%',
+      height: '100%'
+    }
+  });
 
   useEffect(() => {
     moveAnim();
   }, [charPos]);
 
+  useEffect(() => {
+    moveAnim(true);
+  }, [cellSize]);
+
   return (
-    <Animated.View style={[style, { transform: [{ translateX: moveAnimX }, { translateY: moveAnimY }] }]}>
-      <CharImg height="100%" width="100%" color="white" />
+    <Animated.View style={[styles.container, { transform: [{ translateX: moveAnimX }, { translateY: moveAnimY }] }]}>
+      <Image source={CharImg} style={styles.image} />
     </Animated.View>
   );
 };
 
-const style = {
-  position: 'absolute',
-  width: cellSize,
-  height: cellSize,
-  padding: 6
-};
-
-export default Char;
+export default memo(Char);

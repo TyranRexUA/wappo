@@ -1,8 +1,10 @@
 import {
   SET_CHAR_POS,
-  SET_ENEMY_POS,
   SET_LVL,
-  SET_CONTROL_ENABLED
+  SET_CONTROL_ENABLED,
+  SET_ENEMIES,
+  SET_MODAL_VISIBLE,
+  SET_COMPLETED_LVL
 } from './types';
 
 const initialState = {
@@ -12,13 +14,11 @@ const initialState = {
     x: 0,
     y: 0
   },
-  enemyPos: {
-    x: 5,
-    y: 5
-  },
+  enemies: [],
   isControlEnabled: true,
   firstMoveComplete: false,
-  enemyStep: 0
+  isModalVisible: false,
+  maxCompletedLvl: 0,
 };
 
 const map = (state = initialState, action) => {
@@ -29,10 +29,10 @@ const map = (state = initialState, action) => {
         charPos: action.payload,
         firstMoveComplete: true,
       };
-    case SET_ENEMY_POS:
+    case SET_ENEMIES:
       return {
         ...state,
-        enemyPos: action.payload,
+        enemies: action.enemies,
       };
     case SET_LVL:
       return {
@@ -41,10 +41,20 @@ const map = (state = initialState, action) => {
         isControlEnabled: false,
         firstMoveComplete: false,
       };
+    case SET_COMPLETED_LVL:
+      return {
+        ...state,
+        maxCompletedLvl: action.payload,
+      };
     case SET_CONTROL_ENABLED:
       return {
         ...state,
         isControlEnabled: action.payload
+      };
+    case SET_MODAL_VISIBLE:
+      return {
+        ...state,
+        isModalVisible: action.isModalVisible
       };
     default:
       return state;
