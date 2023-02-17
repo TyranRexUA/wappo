@@ -2,12 +2,14 @@
   "env": {
     "node": true,
     "browser": true,
-    "es6": true
+    "es6": true,
+    "jest": true
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "extends": "airbnb",
   "plugins": ["react", "react-native"],
   "rules": {
+    "react/function-component-definition": [2, { "namedComponents": "arrow-function" }],
     "react-native/no-unused-styles": 2,
     "react-native/no-inline-styles": 2,
     "react/jsx-filename-extension": 0,

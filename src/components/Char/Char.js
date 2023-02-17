@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { moveEnemy, setCompletedLvl, setModalVisible } from '../../store/actions';
 import useSize from '../../utils/useSize';
 import CharImg from '../../assets/char.png';
+import isMobile from '../../constants/general';
 
 const Char = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const Char = () => {
         toValue: charPos.x * cellSize,
         duration: isResize ? 0 : 250,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: isMobile
       }
     ).start();
 
@@ -38,7 +39,7 @@ const Char = () => {
         toValue: charPos.y * cellSize,
         duration: isResize ? 0 : 250,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: isMobile
       }
     ).start(() => {
       if (!isResize) {

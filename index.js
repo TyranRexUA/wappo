@@ -9,12 +9,12 @@ import App from './App';
 import { name as appName } from './app.json';
 import store from './src/store/store';
 
-function Root() {
+const Root = () => {
   return (
     <Provider store={store}>
       <App />
     </Provider>
   );
-}
+};
 
 AppRegistry.registerComponent(appName, () => Root);

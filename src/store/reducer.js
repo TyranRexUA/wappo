@@ -21,7 +21,7 @@ const initialState = {
   maxCompletedLvl: 0,
 };
 
-const map = (state = initialState, action) => {
+const map = (state = initialState, action = { type: '' }) => {
   switch (action.type) {
     case SET_CHAR_POS:
       return {

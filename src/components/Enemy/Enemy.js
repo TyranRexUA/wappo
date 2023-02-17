@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { moveEnemy, createLvl, setControlEnabled } from '../../store/actions';
 import useSize from '../../utils/useSize';
 import EnemyImg from '../../assets/enemy.png';
+import isMobile from '../../constants/general';
 
 const Enemy = ({ data, isLastEnemy }) => {
   const { x, y, id } = data;
@@ -46,7 +47,7 @@ const Enemy = ({ data, isLastEnemy }) => {
         toValue: x * cellSize,
         duration: isResize ? 0 : 250,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: isMobile
       }
     ).start();
 
@@ -56,7 +57,7 @@ const Enemy = ({ data, isLastEnemy }) => {
         toValue: y * cellSize,
         duration: isResize ? 0 : 250,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: isMobile
       }
     ).start(() => {
       if (firstMoveComplete && !isResize) {
