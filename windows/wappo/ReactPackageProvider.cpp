@@ -9,7 +9,7 @@ namespace winrt::wappo::implementation
 
 void ReactPackageProvider::CreatePackage(IReactPackageBuilder const &packageBuilder) noexcept
 {
-    AddAttributedModules(packageBuilder, true);
+    AddAttributedModules(packageBuilder);
 }
 
 } // namespace winrt::wappo::implementation

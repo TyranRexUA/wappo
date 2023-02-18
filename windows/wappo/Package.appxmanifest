@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="cb9ca5ca-7893-430b-8af5-71883a4a3320"
+    Name="4eb393d4-8101-4f0c-a9b5-33fcf5e2f9d4"
     Publisher="CN=TyranRex"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="cb9ca5ca-7893-430b-8af5-71883a4a3320" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="4eb393d4-8101-4f0c-a9b5-33fcf5e2f9d4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>wappo</DisplayName>

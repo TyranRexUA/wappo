@@ -1,0 +1,6 @@
+export const SET_CHAR_POS = 'SET_CHAR_POS';
+export const SET_ENEMIES = 'SET_ENEMIES';
+export const SET_CONTROL_ENABLED = 'TOGGLE_CONTROL_ENABLED';
+export const SET_LVL = 'SET_LVL';
+export const SET_MODAL_VISIBLE = 'SET_MODAL_VISIBLE';
+export const SET_COMPLETED_LVL = 'SET_COMPLETED_LVL';
