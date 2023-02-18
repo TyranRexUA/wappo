@@ -26,10 +26,10 @@ const Cell = ({
       position: 'relative',
       ...(isMobile && {
         borderWidth: 3,
-        borderBottomColor: /_/.test(cell) ? 'red' : 'gray',
-        borderTopColor: topBorder ? 'red' : 'gray',
-        borderLeftColor: /L/.test(cell) ? 'red' : 'gray',
-        borderRightColor: rightBorder ? 'red' : 'gray'
+        borderBottomColor: /_/.test(cell) ? 'red' : '#b8b8b8',
+        borderTopColor: topBorder ? 'red' : '#b8b8b8',
+        borderLeftColor: /L/.test(cell) ? 'red' : '#b8b8b8',
+        borderRightColor: rightBorder ? 'red' : '#b8b8b8'
       })
     },
     buttonContent: {
